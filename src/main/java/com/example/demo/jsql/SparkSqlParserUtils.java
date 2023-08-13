@@ -2,12 +2,16 @@ package com.example.demo.jsql;
 
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.sql.catalyst.TableIdentifier;
 import org.apache.spark.sql.catalyst.analysis.UnresolvedRelation;
+import org.apache.spark.sql.catalyst.catalog.CatalogTable;
 import org.apache.spark.sql.catalyst.expressions.*;
+import org.apache.spark.sql.catalyst.parser.SqlBaseParser;
 import org.apache.spark.sql.catalyst.plans.logical.*;
 import org.apache.spark.sql.execution.SparkSqlParser;
-import org.apache.spark.sql.execution.command.CacheTableCommand;
+import org.apache.spark.sql.execution.command.*;
+import org.apache.spark.sql.execution.datasources.CreateTable;
 import org.apache.spark.sql.internal.SQLConf;
 import scala.Option;
 import scala.collection.JavaConversions;
@@ -16,31 +20,34 @@ import scala.collection.Seq;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @author q_j_c
- * @version 1.0
- * @description
- * @date 2021/1/29 17:58
- */
+import static com.example.demo.jsql.SparkSqlParserUtils.TableType.*;
+
+
 public class SparkSqlParserUtils {
-    public static final String INPUT_TABLE = "inputTable";
-    public static final String OUTPUT_TABLE = "outputTable";
-    public static final String CACHE_TABLE = "cacheTable";
+
+    enum TableType {
+        VIEW,
+        DATABASE,
+        CREATE_TABLE,
+        NORMAL_TABLE,
+        INPUT_TABLE,
+        OUTPUT_TABLE,
+        CACHE_TABLE
+    }
+
+    public static final String POINT = ".";
+
     private static SparkSqlParser sparkSqlParser = new SparkSqlParser(new SQLConf());
 
 
     private SparkSqlParserUtils() {
     }
 
-    /**
-     * @param tableMaps, curLogicalPlan, parentLogicalPlan
-     * @return void
-     * @description
-     * @author q_j_c
-     * @date 2021/2/9 18:30
-     */
-    public static void visitedLogicalPlan(ConcurrentHashMap<String, Set<String>> tableMaps, LogicalPlan curLogicalPlan, LogicalPlan parentLogicalPlan) {
+    public static void visitedLogicalPlan(Map<TableType, Set<String>> tableMaps, LogicalPlan curLogicalPlan, LogicalPlan parentLogicalPlan) {
 
+        if (curLogicalPlan instanceof SetDatabaseCommand) {
+            saveDataBase(tableMaps, ((SetDatabaseCommand) curLogicalPlan).databaseName());
+        }
         if (curLogicalPlan instanceof InsertIntoTable) {
             LogicalPlan table = ((InsertIntoTable) curLogicalPlan).table();
             visitedLogicalPlan(tableMaps, table, curLogicalPlan);
@@ -48,11 +55,27 @@ public class SparkSqlParserUtils {
             visitedLogicalPlan(tableMaps, query, curLogicalPlan);
         }
 
-        //寻找保存表的信息的类
+        if (curLogicalPlan instanceof CreateTable) {
+            saveTableName(tableMaps, CREATE_TABLE, ((CreateTable) curLogicalPlan).tableDesc().identifier(), true);
+        }
+
+        if (curLogicalPlan instanceof CreateTableLikeCommand) {
+            saveTableName(tableMaps, CREATE_TABLE, ((CreateTableLikeCommand) curLogicalPlan).targetTable(), true);
+            saveTableName(tableMaps, OUTPUT_TABLE, ((CreateTableLikeCommand) curLogicalPlan).sourceTable(), true);
+        }
+
+        if (curLogicalPlan instanceof CreateViewCommand) {
+            ViewType viewType = ((CreateViewCommand) curLogicalPlan).viewType();
+            boolean needDatabase = viewType instanceof PersistedView$;
+            saveTableName(tableMaps, VIEW, ((CreateViewCommand) curLogicalPlan).name(), needDatabase);
+            visitedLogicalPlan(tableMaps, ((CreateViewCommand) curLogicalPlan).child(), curLogicalPlan);
+        }
+
+        // 寻找保存表的信息的类
         if (curLogicalPlan instanceof UnresolvedRelation) {
             saveTableName(tableMaps, curLogicalPlan, parentLogicalPlan);
         }
-        //联合关键字
+        // 联合关键字
         if (curLogicalPlan instanceof Union) {
             Seq<LogicalPlan> localChildren = curLogicalPlan.children();
             List<LogicalPlan> localPlans = JavaConversions.seqAsJavaList(localChildren);
@@ -60,12 +83,12 @@ public class SparkSqlParserUtils {
                 visitedLogicalPlan(tableMaps, localLogicalPlan, curLogicalPlan);
             });
         }
-        //视图
+        // 视图
         if (curLogicalPlan instanceof View) {
             LogicalPlan child = ((View) curLogicalPlan).child();
             visitedLogicalPlan(tableMaps, child, curLogicalPlan);
         }
-        //二元节点
+        // 二元节点
         if (curLogicalPlan instanceof BinaryNode) {
             LogicalPlan left = ((BinaryNode) curLogicalPlan).left();
             if (left != null) {
@@ -83,7 +106,7 @@ public class SparkSqlParserUtils {
                 }
             }
         }
-        //一元节点
+        // 一元节点
         if (curLogicalPlan instanceof UnaryNode) {
             LogicalPlan child = ((UnaryNode) curLogicalPlan).child();
             visitedLogicalPlan(tableMaps, child, curLogicalPlan);
@@ -93,33 +116,67 @@ public class SparkSqlParserUtils {
                 visitedExpression(tableMaps, condition);
             }
         }
-        //处理临时表
+        // 处理临时表
         if (curLogicalPlan instanceof CacheTableCommand) {
             saveTableName(tableMaps, curLogicalPlan, curLogicalPlan);
             Option<LogicalPlan> plan = ((CacheTableCommand) curLogicalPlan).plan();
-            LogicalPlan child = plan.get();
-            visitedLogicalPlan(tableMaps, child, curLogicalPlan);
+            if (plan.isDefined()) {
+                LogicalPlan child = plan.get();
+                visitedLogicalPlan(tableMaps, child, curLogicalPlan);
+            }
         }
     }
 
-    private static void saveTableName(ConcurrentHashMap<String, Set<String>> tableMaps, LogicalPlan logicalPlan, LogicalPlan parentLogicalPlan) {
-        Set<String> tableNames = null;
+    private static void saveTableName(Map<TableType, Set<String>> tableMaps, LogicalPlan logicalPlan, LogicalPlan parentLogicalPlan) {
+        TableType tableType = null;
         TableIdentifier tableIdentifier = null;
         if (parentLogicalPlan instanceof CacheTableCommand) {
-            tableNames = tableMaps.get(CACHE_TABLE);
+            tableType = CACHE_TABLE;
             tableIdentifier = ((CacheTableCommand) parentLogicalPlan).tableIdent();
         }
         if (parentLogicalPlan instanceof InsertIntoTable) {
-            tableNames = tableMaps.get(OUTPUT_TABLE);
+            tableType = OUTPUT_TABLE;
             tableIdentifier = ((UnresolvedRelation) logicalPlan).tableIdentifier();
         } else if (!(logicalPlan instanceof CacheTableCommand)) {
-            tableNames = tableMaps.get(INPUT_TABLE);
+            tableType = INPUT_TABLE;
             tableIdentifier = ((UnresolvedRelation) logicalPlan).tableIdentifier();
         }
-        if (tableIdentifier != null && tableNames != null) {
-            String tableName = tableIdentifier.database() + "." + tableIdentifier.table();
-            tableNames.add(tableName);
+        saveTableName(tableMaps, tableType, tableIdentifier, true);
+    }
+
+    private static void saveTableName(Map<TableType, Set<String>> tableMaps, TableType tableType, TableIdentifier tableIdentifier, boolean needDatabase) {
+        Set<String> tableNames = tableMaps.get(tableType);
+        if (tableIdentifier != null) {
+            tableNames.add(combineFullTableName(tableMaps, tableIdentifier, needDatabase));
         }
+    }
+
+    private static void saveDataBase(Map<TableType, Set<String>> tableMaps, String databaseName) {
+        Set<String> dataBaseNames = tableMaps.get(DATABASE);
+        if (dataBaseNames != null && StringUtils.isNotBlank(databaseName)) {
+            dataBaseNames.add(databaseName);
+        }
+    }
+
+    private static String combineFullTableName(Map<TableType, Set<String>> tableMaps, TableIdentifier tableIdentifier, boolean needDatabase) {
+        Optional<String> javaOptional = tableIdentifier.database().isDefined()
+                ? Optional.of(tableIdentifier.database().get())
+                : Optional.empty();
+        StringBuilder databaseName = new StringBuilder(javaOptional.orElseGet(() -> {
+            Set<String> databaseNameSet = tableMaps.get(DATABASE);
+            if (CollectionUtils.isNotEmpty(databaseNameSet)) {
+                String[] array = databaseNameSet.toArray(new String[0]);
+                return array[array.length - 1];
+            }
+            return "";
+        }));
+        if (needDatabase && databaseName.length() == 0 && !tableMaps.get(VIEW).contains(tableIdentifier.table())) {
+            throw new RuntimeException(String.format("cannot match databaseName,table [%s] invalid，please check sql", tableIdentifier.table()));
+        }
+        if (databaseName.length() > 0) {
+            databaseName.append(POINT);
+        }
+        return databaseName.append(tableIdentifier.table()).toString();
     }
 
     public static Map<String, Set<String>> getRealIOTableMap(Map<String, Set<String>> tableMaps) {
@@ -132,14 +189,8 @@ public class SparkSqlParserUtils {
         return tableMaps;
     }
 
-    /**
-     * @param curExpression
-     * @return void
-     * @description
-     * @author q_j_c
-     * @date 2021/2/9 16:02
-     */
-    private static void visitedExpression(ConcurrentHashMap<String, Set<String>> tableMaps, Expression curExpression) {
+
+    private static void visitedExpression(Map<TableType, Set<String>> tableMaps, Expression curExpression) {
         //解析In连接词
         if (curExpression instanceof In) {
             Seq<Expression> list = ((In) curExpression).list();
@@ -168,11 +219,10 @@ public class SparkSqlParserUtils {
     }
 
     /**
+     * 获取右端的值的表达式子
+     *
      * @param curExpression
-     * @return org.apache.spark.sql.catalyst.expressions.Expression
-     * @description 获取右端的值的表达式子
-     * @author q_j_c
-     * @date 2021/2/9 16:37
+     * @return
      */
     private static Expression handleBinaryOperatorExpressionOnRight(Expression curExpression) {
         Expression right = null;
@@ -202,11 +252,10 @@ public class SparkSqlParserUtils {
     }
 
     /**
+     * 获取左端的值的表达式子
+     *
      * @param curExpression
-     * @return org.apache.spark.sql.catalyst.expressions.Expression
-     * @description 获取左端的值的表达式子
-     * @author q_j_c
-     * @date 2021/2/9 16:37
+     * @return
      */
     private static Expression handleBinaryOperatorExpressionOnLeft(Expression curExpression) {
         Expression left = null;
@@ -247,7 +296,7 @@ public class SparkSqlParserUtils {
         return plan;
     }
 
-    private static void handleExpressions(ConcurrentHashMap<String, Set<String>> tableMaps, Seq<Expression> seqExpression) {
+    private static void handleExpressions(Map<TableType, Set<String>> tableMaps, Seq<Expression> seqExpression) {
         Collection<Expression> expressions = JavaConversions.asJavaCollection(seqExpression);
         expressions.forEach(expression -> {
             visitedExpression(tableMaps, expression);
@@ -258,8 +307,11 @@ public class SparkSqlParserUtils {
         return sparkSqlParser;
     }
 
-    public static ConcurrentHashMap<String, Set<String>> getTableMaps() {
-        ConcurrentHashMap<String, Set<String>> tableMap = new ConcurrentHashMap<>();
+    public static Map<TableType, Set<String>> getTableMaps() {
+        ConcurrentHashMap<TableType, Set<String>> tableMap = new ConcurrentHashMap<>();
+        tableMap.put(VIEW, new HashSet<>());
+        tableMap.put(DATABASE, new LinkedHashSet<>());
+        tableMap.put(CREATE_TABLE, new HashSet<>());
         tableMap.put(OUTPUT_TABLE, new HashSet<>());
         tableMap.put(INPUT_TABLE, new HashSet<>());
         tableMap.put(CACHE_TABLE, new HashSet<>());
