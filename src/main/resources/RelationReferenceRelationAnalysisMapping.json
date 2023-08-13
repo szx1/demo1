@@ -1,0 +1,1404 @@
+[
+  {
+    "type": "DEAL_TYPE",
+    "title": "被引用风险决策",
+    "goName": "code",
+    "sortField": "grade desc",
+    "columns": [
+      {
+        "title": "风险决策名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "风险决策标识",
+        "dataIndex": "code"
+      }
+    ]
+  },
+  {
+    "type": "EVENT_TYPE",
+    "title": "被引用事件类型",
+    "goName": "id",
+    "columns": [
+      {
+        "title": "事件名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "事件标识",
+        "dataIndex": "id"
+      }
+    ]
+  },
+  {
+    "type": "FIELD_SYSTEM",
+    "title": "被引用系统字段",
+    "goName": "id",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "字段名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "字段标识",
+        "dataIndex": "id"
+      },
+      {
+        "title": "字段分组",
+        "dataIndex": "fieldGroupDisplayName"
+      }
+    ]
+  },
+  {
+    "type": "FIELD_SCRIPT",
+    "title": "被引用动态字段",
+    "goName": "id",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "字段名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "字段标识",
+        "dataIndex": "id"
+      },
+      {
+        "title": "字段分组",
+        "dataIndex": "fieldGroupDisplayName"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_REALTIME",
+    "title": "被引用实时指标[编辑区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_REALTIME_VERSION",
+    "title": "被引用实时指标[运行区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_REALTIME_VERSION_ONLINE",
+    "title": "被引用实时指标[运行区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_REALTIME_VERSION_HISTORY",
+    "title": "被引用实时指标[历史版本]",
+    "goName": "code",
+    "sortField": "code,version",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_OFFLINE",
+    "title": "被引用离线指标[编辑区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_OFFLINE_VERSION",
+    "title": "被引用离线指标[运行区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_OFFLINE_VERSION_ONLINE",
+    "title": "被引用离线指标[运行区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_OFFLINE_VERSION_HISTORY",
+    "title": "被引用离线指标[历史版本]",
+    "goName": "code",
+    "sortField": "code,version",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_EXTERNAL",
+    "title": "被引用外部指标",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      }
+    ]
+  },
+  {
+    "type": "INDEX_EXTERNAL_VERSION",
+    "title": "被引用外部指标",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "指标名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "指标标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "指标版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#metricStatusName}]"
+      }
+    ]
+  },
+  {
+    "type": "MODEL",
+    "title": "被引用模型",
+    "goName": "id",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "模型名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "模型标识",
+        "dataIndex": "id"
+      },
+      {
+        "title": "模型类型",
+        "dataIndex": "modelTypeName"
+      }
+    ]
+  },
+  {
+    "type": "MODEL_VERSION",
+    "title": "被引用模型",
+    "goName": "modelUuid",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "模型名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "模型标识",
+        "dataIndex": "modelUuid"
+      },
+      {
+        "title": "模型版本",
+        "dataIndex": "version"
+      },
+      {
+        "title": "模型类型",
+        "dataIndex": "modelTypeName"
+      }
+    ]
+  },
+  {
+    "type": "FUNCTION",
+    "title": "被引用函数",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "函数名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "函数标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "函数状态",
+        "dataIndex": "statusName"
+      },
+      {
+        "title": "函数类型",
+        "dataIndex": "typeName"
+      }
+    ]
+  },
+  {
+    "type": "FUNCTION_VERSION",
+    "title": "被引用函数",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "函数名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "函数标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "函数版本",
+        "dataIndex": "functionVersion",
+        "expression": "${#version}[${#statusName}]"
+      },
+      {
+        "title": "函数状态",
+        "dataIndex": "functionStatusName"
+      },
+      {
+        "title": "函数类型",
+        "dataIndex": "typeName"
+      }
+    ]
+  },
+  {
+    "type": "FUNCTION_VERSION_EDIT",
+    "title": "被引用函数[编辑区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "函数名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "函数标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "函数版本",
+        "dataIndex": "functionVersion",
+        "expression": "${#version}[${#statusName}]"
+      },
+      {
+        "title": "函数状态",
+        "dataIndex": "functionStatusName"
+      },
+      {
+        "title": "函数类型",
+        "dataIndex": "typeName"
+      }
+    ]
+  },
+  {
+    "type": "FUNCTION_VERSION_ONLINE",
+    "title": "被引用函数[运行区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "函数名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "函数标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "函数版本",
+        "dataIndex": "functionVersion",
+        "expression": "${#version}[${#statusName}]"
+      },
+      {
+        "title": "函数类型",
+        "dataIndex": "typeName"
+      }
+    ]
+  },
+  {
+    "type": "FUNCTION_VERSION_HISTORY",
+    "title": "被引用函数[历史版本]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "函数名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "函数标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "函数版本",
+        "dataIndex": "functionVersion",
+        "expression": "${#version}[${#statusName}]"
+      },
+      {
+        "title": "函数类型",
+        "dataIndex": "typeName"
+      }
+    ]
+  },
+  {
+    "type": "DECISION_TOOL",
+    "title": "被引用决策工具",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "决策工具名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "决策工具标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "决策工具状态",
+        "dataIndex": "statusName"
+      },
+      {
+        "title": "决策工具类型",
+        "dataIndex": "typeName"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "DECISION_TOOL_VERSION",
+    "title": "被引用决策工具",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "决策工具名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "决策工具标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "决策工具版本",
+        "dataIndex": "decisionToolVersion",
+        "expression": "${#version}[${#statusName}]"
+      },
+      {
+        "title": "决策工具状态",
+        "dataIndex": "decisionToolStatusName"
+      },
+      {
+        "title": "决策工具类型",
+        "dataIndex": "typeName"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "DECISION_TOOL_VERSION_EDIT",
+    "title": "被引用决策工具[编辑区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "决策工具名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "决策工具标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "决策工具版本",
+        "dataIndex": "decisionToolVersion",
+        "expression": "${#version}[${#statusName}]"
+      },
+      {
+        "title": "决策工具状态",
+        "dataIndex": "decisionToolStatusName"
+      },
+      {
+        "title": "决策工具类型",
+        "dataIndex": "typeName"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "DECISION_TOOL_VERSION_ONLINE",
+    "title": "被引用决策工具[运行区]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "决策工具名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "决策工具标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "决策工具版本",
+        "dataIndex": "decisionToolVersion",
+        "expression": "${#version}[${#statusName}]"
+      },
+      {
+        "title": "决策工具类型",
+        "dataIndex": "typeName"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "DECISION_TOOL_VERSION_HISTORY",
+    "title": "被引用决策工具[历史版本]",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "决策工具名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "决策工具标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "决策工具版本",
+        "dataIndex": "decisionToolVersion",
+        "expression": "${#version}[${#statusName}]"
+      },
+      {
+        "title": "决策工具类型",
+        "dataIndex": "typeName"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "THIRD_SERVICE",
+    "title": "被引用三方",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "三方名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "三方标识",
+        "dataIndex": "code"
+      },{
+        "title": "三方状态",
+        "dataIndex": "statusName"
+      }
+    ]
+  },
+  {
+    "type": "THIRD_SERVICE_VERSION",
+    "title": "被引用三方",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "三方名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "三方标识",
+        "dataIndex": "code"
+      },{
+        "title": "三方状态",
+        "dataIndex": "statusName"
+      }
+    ]
+  },
+  {
+    "type": "NAME_LIST",
+    "title": "被引用名单",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "名单名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "名单标识",
+        "dataIndex": "code"
+      }
+    ]
+  },
+  {
+    "type": "RULE",
+    "title": "被引用规则",
+    "goName": "code",
+    "sortField": "ruleSetGmtCreate desc,displayOrder",
+    "columns": [
+      {
+        "title": "规则名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则编号",
+        "dataIndex": "code"
+      },
+      {
+        "title": "所属规则集名称",
+        "dataIndex": "ruleSetName"
+      },
+      {
+        "title": "所属规则集标识",
+        "dataIndex": "ruleSetCode"
+      },
+      {
+        "title": "所属规则集版本",
+        "dataIndex": "ruleSetVersion",
+        "expression": "V${#ruleSetVersion}[${#ruleSetStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "RULE_EDIT",
+    "title": "被引用规则[编辑区]",
+    "goName": "code",
+    "sortField": "ruleSetGmtCreate desc,displayOrder",
+    "columns": [
+      {
+        "title": "规则名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则编号",
+        "dataIndex": "code"
+      },
+      {
+        "title": "所属规则集名称",
+        "dataIndex": "ruleSetName"
+      },
+      {
+        "title": "所属规则集标识",
+        "dataIndex": "ruleSetCode"
+      },
+      {
+        "title": "所属规则集版本",
+        "dataIndex": "ruleSetVersion",
+        "expression": "V${#ruleSetVersion}[${#ruleSetStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "RULE_RUN",
+    "title": "被引用规则[运行区]",
+    "goName": "code",
+    "sortField": "ruleSetGmtCreate desc,displayOrder",
+    "columns": [
+      {
+        "title": "规则名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则编号",
+        "dataIndex": "code"
+      },
+      {
+        "title": "所属规则集名称",
+        "dataIndex": "ruleSetName"
+      },
+      {
+        "title": "所属规则集标识",
+        "dataIndex": "ruleSetCode"
+      },
+      {
+        "title": "所属规则集版本",
+        "dataIndex": "ruleSetVersion",
+        "expression": "V${#ruleSetVersion}[${#ruleSetStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "RULE_HISTORY",
+    "title": "被引用规则[历史版本]",
+    "goName": "code",
+    "sortField": "ruleSetGmtCreate desc,displayOrder,ruleSetVersion",
+    "columns": [
+      {
+        "title": "规则名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则编号",
+        "dataIndex": "code"
+      },
+      {
+        "title": "所属规则集名称",
+        "dataIndex": "ruleSetName"
+      },
+      {
+        "title": "所属规则集标识",
+        "dataIndex": "ruleSetCode"
+      },
+      {
+        "title": "所属规则集版本",
+        "dataIndex": "ruleSetVersion",
+        "expression": "V${#ruleSetVersion}[${#ruleSetStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "RULE_SET",
+    "title": "被引用规则集[编辑区]",
+    "tips": "",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "规则集名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则集标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "规则集版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#ruleSetStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "RULE_SET_VERSION",
+    "title": "被引用规则集[运行区]",
+    "tips": "",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "规则集名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则集标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "规则集版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#ruleSetStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "RULE_SET_VERSION_ONLINE",
+    "title": "被引用规则集[运行区]",
+    "tips": "",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "规则集名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则集标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "规则集版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#ruleSetStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "RULE_SET_VERSION_HISTORY",
+    "title": "被引用规则集[历史版本]",
+    "tips": "",
+    "goName": "code",
+    "sortField": "gmtCreate desc,code,version",
+    "columns": [
+      {
+        "title": "规则集名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则集标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "规则集版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#ruleSetStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY",
+    "title": "被引用策略",
+    "tips": "注意流模式策略判断体现在过程判断的适配的字段",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "策略状态",
+        "dataIndex": "policyStatusName"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY_EDIT",
+    "title": "被引用策略[编辑区]",
+    "tips": "",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyEditName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "策略状态",
+        "dataIndex": "policyEditStatusName"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY_RUN",
+    "title": "被引用策略[运行区]",
+    "tips": "",
+    "goName": "code",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "策略状态",
+        "dataIndex": "policyStatusName"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY_VERSION",
+    "title": "被引用策略版本",
+    "tips": "注意流模式策略判断体现在过程判断的适配的字段",
+    "goName": "code",
+    "sortField": "gmtCreate desc,version",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "策略版本",
+        "dataIndex": "version",
+        "expression": "${#version}[${#policyVersionEditStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY_VERSION_EDIT",
+    "title": "被引用策略版本[编辑区]",
+    "tips": "注意流模式策略判断体现在过程判断的适配的字段",
+    "goName": "code",
+    "sortField": "gmtCreate desc,version",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyEditName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "策略版本",
+        "dataIndex": "version",
+        "expression":"${#version}[${#policyVersionEditStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY_VERSION_RUN",
+    "title": "被引用策略版本[运行区]",
+    "tips": "注意流模式策略判断体现在过程判断的适配的字段",
+    "goName": "code",
+    "sortField": "gmtCreate desc,version",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "code"
+      },
+      {
+        "title": "策略版本",
+        "dataIndex": "version",
+        "expression":"${#version}[${#policyVersionEditStatusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY_PIBLISH_HIS",
+    "title": "被引用策略发布历史",
+    "tips": "",
+    "sortField": "id",
+    "goName": "policyCode",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "policyCode"
+      },
+      {
+        "title": "策略版本",
+        "dataIndex": "version",
+        "expression": "P${#id}[${#statusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY_PIBLISH_HIS_EDIT",
+    "title": "被引用策略发布配置[编辑区]",
+    "tips": "",
+    "goName": "policyCode",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyEditName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "policyCode"
+      },
+      {
+        "title": "发布状态",
+        "dataIndex": "statusName"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY_PIBLISH_HIS_RUN",
+    "title": "被引用策略发布配置[运行区]",
+    "tips": "",
+    "sortField": "version",
+    "goName": "policyCode",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "policyCode"
+      },
+      {
+        "title": "历史版本",
+        "dataIndex": "version",
+        "expression": "P${#id}"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "POLICY_PIBLISH_HIS_HISTORY",
+    "title": "被引用策略发布配置[历史版本]",
+    "tips": "",
+    "sortField": "id",
+    "goName": "policyCode",
+    "columns": [
+      {
+        "title": "策略名称",
+        "dataIndex": "policyName"
+      },
+      {
+        "title": "策略标识",
+        "dataIndex": "policyCode"
+      },
+      {
+        "title": "历史版本",
+        "dataIndex": "version",
+        "expression": "P${#id}[${#statusName}]"
+      },
+      {
+        "title": "所属机构",
+        "dataIndex": "org"
+      },
+      {
+        "title": "所属渠道",
+        "dataIndex": "app"
+      }
+    ]
+  },
+  {
+    "type": "RULE_IMMUNE",
+    "title": "被引用规则免疫",
+    "goName": "name",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "标识",
+        "dataIndex": "id"
+      },
+      {
+        "title": "规则免疫名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则集名称",
+        "dataIndex": "ruleSetName"
+      },
+      {
+        "title": "规则名称",
+        "dataIndex": "ruleName"
+      },
+      {
+        "title": "创建类型",
+        "dataIndex": "createTypeName"
+      }
+    ]
+  },
+  {
+    "type": "NO_DISTURB",
+    "title": "被引用免打扰",
+    "goName": "name",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "标识",
+        "dataIndex": "id"
+      },
+      {
+        "title": "免打扰名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "规则集名称",
+        "dataIndex": "ruleSetName"
+      }
+    ]
+  },
+  {
+    "type": "API_SERVICE",
+    "title": "被引用对接服务",
+    "goName": "id",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "服务名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "服务标识",
+        "dataIndex": "id"
+      },
+      {
+        "title": "服务状态",
+        "dataIndex": "statusName"
+      },
+      {
+        "title": "服务类型",
+        "dataIndex": "typeName"
+      }
+    ]
+  },
+  {
+    "type": "ETL_HANDLER",
+    "title": "被引用ETL处理器",
+    "goName": "id",
+    "sortField": "gmtCreate desc",
+    "columns": [
+      {
+        "title": "ETL处理器名称",
+        "dataIndex": "name"
+      },
+      {
+        "title": "ETL处理器标识",
+        "dataIndex": "id"
+      },
+      {
+        "title": "ETL处理器状态",
+        "dataIndex": "statusName"
+      }
+    ]
+  }
+]

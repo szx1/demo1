@@ -1,0 +1,539 @@
+[
+  {
+    "id": 10,
+    "name": "风险决策",
+    "code": "DEAL_TYPE",
+    "goUri": "/noah/riskhandle",
+    "isShow": true
+  },
+  {
+    "id": 20,
+    "name": "事件类型",
+    "code": "EVENT_TYPE",
+    "goUri": "/bridge/dictionary?myKey=EventType",
+    "isShow": false
+  },
+  {
+    "id": 30,
+    "name": "系统字段",
+    "code": "FIELD_SYSTEM",
+    "goUri": "/bridge/fields/fieldManage?currentTab=1",
+    "goParams": {
+      "name": "id"
+    },
+    "isShow": true
+  },
+  {
+    "id": 40,
+    "name": "动态字段",
+    "code": "FIELD_SCRIPT",
+    "goUri": "/bridge/fields/fieldManage?currentTab=2",
+    "goParams": {
+      "name": "id"
+    },
+    "isShow": true
+  },
+  {
+    "id": 50,
+    "name": "实时指标",
+    "code": "INDEX_REALTIME",
+    "filterExpression": "${#notIn(#metricStatus,'RUNNING')}",
+    "goUri": "/index/realtime?currentTab=2",
+    "goParams": {
+      "metricCodes": "code"
+    },
+    "jumpType": "INDEX_REALTIME_VERSION",
+    "isShow": true
+  },
+  {
+    "id": 51,
+    "name": "实时指标",
+    "code": "INDEX_REALTIME_VERSION",
+    "goUri": "/index/realtime?currentTab=1",
+    "goParams": {
+      "metricCodes": "code"
+    },
+    "children":[
+      {
+        "id": 52,
+        "name": "实时指标[运行区]",
+        "code": "INDEX_REALTIME_VERSION_ONLINE",
+        "filterExpression": "${#in(#status,'ONLINE')}",
+        "goUri": "/index/realtime?currentTab=1",
+        "goParams": {
+          "metricCodes": "code"
+        }
+      },
+      {
+        "id": 53,
+        "name": "实时指标[历史版本]",
+        "code": "INDEX_REALTIME_VERSION_HISTORY",
+        "filterExpression": "${#in(#status,'UNONLINE')}",
+        "goUri": "/index/realtime?currentTab=2",
+        "goParams": {
+          "metricCodes": "code"
+        }
+      }
+    ],
+    "isShow": false
+  },
+  {
+    "id": 60,
+    "name": "离线指标",
+    "code": "INDEX_OFFLINE",
+    "filterExpression": "${#notIn(#metricStatus,'RUNNING')}",
+    "goUri": "/index/offline?currentTab=2",
+    "goParams": {
+      "metricCodes": "code"
+    },
+    "jumpType": "INDEX_OFFLINE_VERSION",
+    "isShow": true
+  },
+  {
+    "id": 61,
+    "name": "离线指标",
+    "code": "INDEX_OFFLINE_VERSION",
+    "goUri": "/index/offline?currentTab=1",
+    "goParams": {
+      "metricCodes": "code"
+    },
+    "children":[
+      {
+        "id": 62,
+        "name": "离线指标[运行区]",
+        "code": "INDEX_OFFLINE_VERSION_ONLINE",
+        "filterExpression": "${#in(#status,'ONLINE')}",
+        "goUri": "/index/offline?currentTab=1",
+        "goParams": {
+          "metricCodes": "code"
+        }
+      },
+      {
+        "id": 63,
+        "name": "离线指标[历史版本]",
+        "code": "INDEX_OFFLINE_VERSION_HISTORY",
+        "filterExpression": "${#in(#status,'UNONLINE')}",
+        "goUri": "/index/offline?currentTab=2",
+        "goParams": {
+          "metricCodes": "code"
+        }
+      }
+    ],
+    "isShow": false
+  },
+  {
+    "id": 65,
+    "name": "外部指标",
+    "code": "INDEX_EXTERNAL",
+    "goUri": "/index/external?currentTab=2",
+    "goParams": {
+      "metricCodes": "code"
+    },
+    "jumpType": "INDEX_EXTERNAL_VERSION",
+    "isShow": true
+  },
+  {
+    "id": 66,
+    "name": "外部指标",
+    "code": "INDEX_EXTERNAL_VERSION",
+    "goUri": "/index/external?currentTab=1",
+    "goParams": {
+      "metricCodes": "code"
+    },
+    "isShow": false
+  },
+  {
+    "id": 70,
+    "name": "模型",
+    "code": "MODEL",
+    "goUri": "/model/modelManage",
+    "goParams": {
+      "currentTab": "#{modelType:P=1,J=2,GM=3}",
+      "modelUuid": "modelUuid"
+    },
+    "isShow": false
+  },
+  {
+    "id": 71,
+    "name": "模型",
+    "code": "MODEL_VERSION",
+    "goUri": "/model/modelManage",
+    "goParams": {
+      "currentTab": "#{modelType:P=1,J=2,GM=3}",
+      "modelUuid": "modelUuid"
+    },
+    "analysisExcludes":["MODEL"],
+    "isShow": true
+  },
+  {
+    "id": 80,
+    "name": "函数",
+    "code": "FUNCTION",
+    "goUri": "/noah/formula?currentTab=1",
+    "goParams": {
+      "code": "code"
+    },
+    "jumpType": "FUNCTION_VERSION",
+    "isShow": true
+  },
+  {
+    "id": 81,
+    "name": "函数",
+    "code": "FUNCTION_VERSION",
+    "goUri": "/noah/formula?currentTab=1",
+    "goParams": {
+      "code": "code"
+    },
+    "children": [
+      {
+        "id": 82,
+        "name": "函数[编辑]",
+        "code": "FUNCTION_VERSION_EDIT",
+        "goUri": "/noah/formula?currentTab=2",
+        "filterExpression": "${#in(#version,#maxVersion) && #notIn(#status,'ONLINE')}",
+        "goParams": {
+          "code": "code"
+        }
+      },
+      {
+        "id": 83,
+        "name": "函数[运行]",
+        "code": "FUNCTION_VERSION_ONLINE",
+        "goUri": "/noah/formula?currentTab=1",
+        "filterExpression": "${#in(#status,'ONLINE')}",
+        "goParams": {
+          "code": "code"
+        }
+      },
+      {
+        "id": 84,
+        "name": "函数[历史版本]",
+        "code": "FUNCTION_VERSION_HISTORY",
+        "filterExpression": "${#notIn(#status,'ONLINE') && #notIn(#version,#maxVersion)}",
+        "goUri": "/noah/formula?currentTab=2",
+        "goParams": {
+          "code": "code"
+        }
+      }
+    ],
+    "isShow": false
+  },
+  {
+    "id": 90,
+    "name": "决策工具",
+    "code": "DECISION_TOOL",
+    "goUri": "/noah/bodyguard/modelTool?currentTab=1",
+    "goParams": {
+      "code": "code"
+    },
+    "jumpType": "DECISION_TOOL_VERSION",
+    "isShow": true
+  },
+  {
+    "id": 91,
+    "name": "决策工具",
+    "code": "DECISION_TOOL_VERSION",
+    "goUri": "/noah/bodyguard/modelTool?currentTab=1",
+    "goParams": {
+      "code": "code"
+    },
+    "children": [
+      {
+        "id": 92,
+        "name": "决策工具[编辑]",
+        "code": "DECISION_TOOL_VERSION_EDIT",
+        "goUri": "/noah/bodyguard/modelTool?currentTab=2",
+        "filterExpression": "${#notIn(#status,'4') && #in(#isEditDisplay,'true')}",
+        "goParams": {
+          "code": "code"
+        }
+      },
+      {
+        "id": 93,
+        "name": "决策工具[运行]",
+        "code": "DECISION_TOOL_VERSION_ONLINE",
+        "goUri": "/noah/bodyguard/modelTool?currentTab=1",
+        "filterExpression": "${#in(#status,'4')}",
+        "goParams": {
+          "code": "code"
+        }
+      },
+      {
+        "id": 94,
+        "name": "决策工具[历史版本]",
+        "code": "DECISION_TOOL_VERSION_HISTORY",
+        "filterExpression": "${#notIn(#status,'4') && #in(#isEditDisplay,'false')}",
+        "goUri": "/noah/bodyguard/modelTool?currentTab=2",
+        "goParams": {
+          "code": "code"
+        }
+      }
+    ],
+    "isShow": false
+  },
+  {
+    "id": 100,
+    "name": "三方服务",
+    "code": "THIRD_SERVICE",
+    "goUri": "/handle/supplierManagement/dataServiceList",
+    "goParams": {
+      "name": "code"
+    },
+    "jumpType": "THIRD_SERVICE_VERSION",
+    "isShow": true
+  },
+  {
+    "id": 101,
+    "name": "三方服务",
+    "code": "THIRD_SERVICE_VERSION",
+    "goUri": "/handle/supplierManagement/dataServiceList",
+    "goParams": {
+      "name": "code"
+    },
+    "isShow": false
+  },
+  {
+    "id": 110,
+    "name": "名单集",
+    "code": "NAME_LIST",
+    "goUri": "/data/formManage/listDefinition",
+    "goParams": {
+      "defineName": "name"
+    },
+    "isShow": true
+  },
+  {
+    "id": 120,
+    "name": "规则",
+    "code": "RULE",
+    "goUri": "/noah/ruleSet/allRules?currentTab=1",
+    "goParams": {
+      "code": "code"
+    },
+    "children": [
+      {
+        "id": 121,
+        "name": "规则[编辑区]",
+        "code": "RULE_EDIT",
+        "filterExpression": "${#in(#parentType,'RULE_SET') && #notIn(#ruleSetStatus,'online')}",
+        "goUri": "/noah/ruleSet/allRules?currentTab=2",
+        "goParams": {
+          "code": "code"
+        }
+      },
+      {
+        "id": 122,
+        "name": "规则[运行区]",
+        "code": "RULE_RUN",
+        "filterExpression": "${#in(#parentType,'RULE_SET_VERSION') && #in(#ruleSetStatus,'online')}",
+        "goUri": "/noah/ruleSet/allRules?currentTab=1",
+        "goParams": {
+          "code": "code"
+        }
+      },
+      {
+        "id": 123,
+        "name": "规则[历史版本]",
+        "code": "RULE_HISTORY",
+        "filterExpression": "${#in(#parentType,'RULE_SET_VERSION') && #in(#ruleSetStatus,'history')}",
+        "goUri": "/noah/ruleSet/allRules?currentTab=2",
+        "goParams": {
+          "code": "code"
+        }
+      }
+    ],
+    "isShow": true
+  },
+  {
+    "id": 130,
+    "name": "规则集",
+    "code": "RULE_SET",
+    "goUri": "/noah/ruleSet?currentTab=2",
+    "filterExpression": "${#notIn(#ruleSetStatus,'online')}",
+    "goParams": {
+      "code": "code"
+    },
+    "jumpType": "RULE_SET_VERSION",
+    "isShow": true
+  },
+  {
+    "id": 131,
+    "name": "规则集",
+    "code": "RULE_SET_VERSION",
+    "goUri": "/noah/ruleSet?currentTab=1",
+    "goParams": {
+      "code": "code"
+    },
+    "children":[
+      {
+        "id": 132,
+        "name": "规则集[运行]",
+        "code": "RULE_SET_VERSION_ONLINE",
+        "goUri": "/noah/ruleSet?currentTab=1",
+        "filterExpression": "${#in(#ruleSetStatus,'online')}",
+        "goParams": {
+          "code": "code"
+        }
+      },
+      {
+        "id": 133,
+        "name": "规则集[历史版本]",
+        "code": "RULE_SET_VERSION_HISTORY",
+        "filterExpression": "${#in(#ruleSetStatus,'history')}",
+        "goUri": "/noah/ruleSet?currentTab=2",
+        "goParams": {
+          "code": "code"
+        }
+      }
+    ],
+    "isShow": false
+  },
+  {
+    "id": 140,
+    "name": "策略",
+    "code": "POLICY",
+    "goUri": "/noah/policyManage?currentTab=1",
+    "goParams": {
+      "code": "code"
+    },
+    "children": [
+      {
+        "id": 141,
+        "name": "策略[编辑区]",
+        "code": "POLICY_EDIT",
+        "filterExpression": "${#in(#status,'READYING,UNONLINE')}",
+        "goUri": "/noah/policyManage?currentTab=2",
+        "goParams": {
+          "code": "code"
+        }
+      },
+      {
+        "id": 142,
+        "name": "策略[运行区]",
+        "code": "POLICY_RUN",
+        "filterExpression": "${#in(#status,'ONLINE')}",
+        "goUri": "/noah/policyManage?currentTab=1",
+        "goParams": {
+          "code": "code"
+        }
+      }
+    ],
+    "mergeTypes": ["POLICY_VERSION","POLICY_PIBLISH_HIS"],
+    "isShow": true
+  },
+  {
+    "id": 150,
+    "name": "策略版本",
+    "code": "POLICY_VERSION",
+    "goUri": "/noah/policyManage?currentTab=1",
+    "goParams": {
+      "code": "code"
+    },
+    "children": [
+      {
+        "id": 151,
+        "name": "策略版本[编辑区]",
+        "code": "POLICY_VERSION_EDIT",
+        "filterExpression": "${#in(#status,'READYING,UNONLINE') && #notIn(#policyVersionEditStatus,'1')}",
+        "goUri": "/noah/policyManage?currentTab=2",
+        "goParams": {
+          "code": "code"
+        }
+      },
+      {
+        "id": 152,
+        "name": "策略版本[运行区]",
+        "code": "POLICY_VERSION_RUN",
+        "filterExpression": "${#in(#status,'ONLINE')}",
+        "goUri": "/noah/policyManage?currentTab=1",
+        "goParams": {
+          "code": "code"
+        }
+      }
+    ],
+    "isShow": false
+  },
+  {
+    "id": 160,
+    "name": "策略发布历史",
+    "code": "POLICY_PIBLISH_HIS",
+    "goUri": "/noah/policyManage?currentTab=1",
+    "goParams": {
+      "code": "policyCode"
+    },
+    "children":[
+      {
+        "id": 161,
+        "name": "策略发布配置[编辑区]",
+        "code": "POLICY_PIBLISH_HIS_EDIT",
+        "filterExpression": "${#in(#dataType,'EDITING')}",
+        "goUri": "/noah/policyManage?currentTab=2",
+        "goParams": {
+          "code": "policyCode"
+        }
+      },
+      {
+        "id": 162,
+        "name": "策略发布配置[运行区]",
+        "code": "POLICY_PIBLISH_HIS_RUN",
+        "filterExpression": "${#in(#dataType,'ONLINE')}",
+        "goUri": "/noah/policyManage?currentTab=1",
+        "goParams": {
+          "code": "policyCode"
+        }
+      },
+      {
+        "id": 163,
+        "name": "策略发布配置[历史版本]",
+        "code": "POLICY_PIBLISH_HIS_HISTORY",
+        "filterExpression": "${#in(#dataType,'HISTORY')}",
+        "goUri": "/noah/policyManage?currentTab=2",
+        "goParams": {
+          "code": "policyCode"
+        }
+      }
+    ],
+    "mergeTypes": ["POLICY_VERSION"],
+    "isShow": false
+  },
+  {
+    "id": 170,
+    "name": "规则免疫",
+    "code": "RULE_IMMUNE",
+    "goUri": "/noah/immune/config?currentTab=1",
+    "goParams": {
+      "ruleName": "ruleName"
+    },
+    "isShow": true
+  },
+  {
+    "id": 180,
+    "name": "免打扰",
+    "code": "NO_DISTURB",
+    "goUri": "/noah/immune/config?currentTab=2",
+    "goParams": {
+      "ruleSetName": "ruleSetName"
+    },
+    "isShow": true
+  },
+  {
+    "id": 190,
+    "name": "对接服务",
+    "code": "API_SERVICE",
+    "goUri": "/unite/serviceManage/setService",
+    "goParams": {
+      "code": "code"
+    },
+    "isShow": true
+  },
+  {
+    "id": 200,
+    "name": "ETL处理器",
+    "code": "ETL_HANDLER",
+    "goUri": "/handle/supplierManagement/etl",
+    "goParams": {
+      "name": "name"
+    },
+    "isShow": true
+  }
+]

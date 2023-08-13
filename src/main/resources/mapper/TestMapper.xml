@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.TestMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Test">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="age" column="age" jdbcType="INTEGER"/>
+        <result property="forIndex" column="for_index" jdbcType="INTEGER"/>
+        <result property="date" column="gmt_modify" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="finalMap" type="com.example.demo.entity.UserTotalDO">
+        <collection property="result" resultMap="BaseResultMap"/>
+
+    </resultMap>
+
+    <resultMap id="totalMap" type="java.lang.Integer">
+        <result column="total"/>
+    </resultMap>
+
+    <resultMap id="groupBy" type="generator.domain.GroupTest">
+        <result property="name" column="name"/>
+        <!--        <collection property="testList" ofType="generator.domain.Test">-->
+        <!--            <id property="id" column="id" jdbcType="INTEGER"/>-->
+        <!--            <result property="name" column="name" jdbcType="VARCHAR"/>-->
+        <!--            <result property="age" column="age" jdbcType="INTEGER"/>-->
+        <!--            <result property="forIndex" column="for_index" jdbcType="INTEGER"/>-->
+        <!--        </collection>-->
+        <collection property="testList" resultMap="BaseResultMap"/>
+    </resultMap>
+
+    <!--    <resultMap id="groupBy2" type="generator.domain.Test">-->
+    <!--        <id property="id" column="id" jdbcType="INTEGER"/>-->
+    <!--        <collection >-->
+
+    <!--        </collection>-->
+    <!--    </resultMap>-->
+
+    <resultMap id="map" type="java.util.Map">
+        <result column="name2" property="name"/>
+        <collection property="test" javaType="arrayList" ofType="generator.domain.Test">
+
+        </collection>
+    </resultMap>
+
+    <select id="testTotal" resultMap="BaseResultMap,totalMap">
+        select SQL_CALC_FOUND_ROWS *
+        from (select distinct name, age
+              from test
+              union all
+              select distinct name, age
+              from test1) unionTable;
+        SELECT found_rows() AS total;
+    </select>
+    <select id="testGroupBy" resultMap="groupBy">
+        select t.id, t.age, t.for_index, t1.name
+        from test t
+                 join test1 t1 on t.age = t1.age;
+    </select>
+    <select id="testGroupBy2" resultMap="BaseResultMap">
+        select t.id, t.age, t.for_index, t1.name
+        from test t
+                 join test1 t1 on t.age = t1.age
+    </select>
+    <select id="getName2TestMap" resultMap="map">
+
+    </select>
+    <select id="getIdsByName" resultType="java.lang.String">
+        select id from test where name in
+        <foreach collection="names" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+    <select id="getGmtModifyFromName" resultType="java.util.Date">
+        select gmt_modify
+        from test
+        where name = #{name}
+    </select>
+    <select id="selectOneOrderById" resultMap="BaseResultMap">
+        select * from test order by id desc limit 1
+    </select>
+
+    <insert id="insertReturnId" keyProperty="test.id" useGeneratedKeys="true">
+        insert into test
+            (name, age, for_index)
+        values ( #{test.name,jdbcType=VARCHAR}, #{test.age,jdbcType=INTEGER}
+               , #{test.forIndex,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertDate">
+        insert into test (name, age, for_index, gmt_modify)
+        values ('szx', 1, 1, #{date})
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="generator.domain.Test">
+        update test
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                age = #{age,jdbcType=INTEGER},
+            </if>
+            <if test="forIndex != null">
+                for_index = #{forIndex,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="generator.domain.Test">
+        update test
+        set name      = #{name,jdbcType=VARCHAR},
+            age       = #{age,jdbcType=INTEGER},
+            for_index = #{forIndex,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateWhenCase"></update>
+</mapper>

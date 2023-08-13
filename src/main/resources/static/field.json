@@ -1,0 +1,11 @@
+{
+  "S_S_BIZID": "bizId",
+  "S_S_BUSINESSTYPE": "businessType",
+  "S_S_EVENTTYPE": "eventType",
+  "S_S_INVOKETYPE": "invokeType",
+  "S_S_BIZMODEL": "bizModel",
+  "S_S_BIZSTATUS": "status",
+  "S_N_REASONCODE": "reasonCode",
+  "S_S_FINALDECISIONCODE": "finalDecisionCode",
+  "S_S_TOKENID": "tokenId"
+}
