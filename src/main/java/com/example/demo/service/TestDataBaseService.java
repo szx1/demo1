@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.request.ListRequest;
 import generator.domain.Test;
 import generator.mapper.TestMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -15,6 +17,7 @@ import java.util.List;
  * @date 2023/2/8
  */
 @Service
+@ConditionalOnBean(ListRequest.class)
 public class TestDataBaseService {
     @Resource
     private TestMapper testMapper;

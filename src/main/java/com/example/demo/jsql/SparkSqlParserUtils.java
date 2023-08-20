@@ -1,13 +1,14 @@
 package com.example.demo.jsql;
 
 
-import org.apache.commons.collections.CollectionUtils;
+import cn.tongdun.tianzhou.common.base.BusException;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.sql.catalyst.TableIdentifier;
 import org.apache.spark.sql.catalyst.analysis.UnresolvedRelation;
-import org.apache.spark.sql.catalyst.catalog.CatalogTable;
 import org.apache.spark.sql.catalyst.expressions.*;
-import org.apache.spark.sql.catalyst.parser.SqlBaseParser;
 import org.apache.spark.sql.catalyst.plans.logical.*;
 import org.apache.spark.sql.execution.SparkSqlParser;
 import org.apache.spark.sql.execution.command.*;
@@ -19,23 +20,37 @@ import scala.collection.Seq;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import static com.example.demo.jsql.SparkSqlParserUtils.TableType.*;
 
-
+@Slf4j
 public class SparkSqlParserUtils {
 
     enum TableType {
-        VIEW,
-        DATABASE,
-        CREATE_TABLE,
-        NORMAL_TABLE,
-        INPUT_TABLE,
-        OUTPUT_TABLE,
-        CACHE_TABLE
+        VIEW("create的视图(包括临时视图和永久视图)"),
+        TEMP("临时表，query缓存表"),
+        DATABASE("数据库"),
+        CREATE_TABLE("create的表"),
+        SOURCE_TABLE("输入表或视图"),
+        TARGET_TABLE("输出表或视图"),
+        CACHE_TABLE("缓存表"),
+        ;
+
+        @Getter
+        private final String desc;
+
+        TableType(String desc) {
+            this.desc = desc;
+        }
     }
 
     public static final String POINT = ".";
+    public static final String TEMP_REPLACE = "'temp'";
+    public static final String EMPTY = "";
+    public static final String SEMICOLON = ";";
+
+    private static final Pattern pattern = Pattern.compile("\\$\\{[^}]*}");
 
     private static SparkSqlParser sparkSqlParser = new SparkSqlParser(new SQLConf());
 
@@ -48,6 +63,23 @@ public class SparkSqlParserUtils {
         if (curLogicalPlan instanceof SetDatabaseCommand) {
             saveDataBase(tableMaps, ((SetDatabaseCommand) curLogicalPlan).databaseName());
         }
+
+        if (curLogicalPlan instanceof DescribeTableCommand) {
+            saveTableName(tableMaps, SOURCE_TABLE, ((DescribeTableCommand) curLogicalPlan).table(), true);
+        }
+
+        if (curLogicalPlan instanceof DropTableCommand) {
+            saveTableName(tableMaps, SOURCE_TABLE, ((DropTableCommand) curLogicalPlan).tableName(), true);
+        }
+
+        if (curLogicalPlan instanceof TruncateTableCommand) {
+            saveTableName(tableMaps, SOURCE_TABLE, ((TruncateTableCommand) curLogicalPlan).tableName(), true);
+        }
+
+        if (curLogicalPlan instanceof ShowCreateTableCommand) {
+            saveTableName(tableMaps, SOURCE_TABLE, ((ShowCreateTableCommand) curLogicalPlan).table(), true);
+        }
+
         if (curLogicalPlan instanceof InsertIntoTable) {
             LogicalPlan table = ((InsertIntoTable) curLogicalPlan).table();
             visitedLogicalPlan(tableMaps, table, curLogicalPlan);
@@ -57,11 +89,15 @@ public class SparkSqlParserUtils {
 
         if (curLogicalPlan instanceof CreateTable) {
             saveTableName(tableMaps, CREATE_TABLE, ((CreateTable) curLogicalPlan).tableDesc().identifier(), true);
+            Option<LogicalPlan> query = ((CreateTable) curLogicalPlan).query();
+            if (query.isDefined()) {
+                visitedLogicalPlan(tableMaps, query.get(), curLogicalPlan);
+            }
         }
 
         if (curLogicalPlan instanceof CreateTableLikeCommand) {
             saveTableName(tableMaps, CREATE_TABLE, ((CreateTableLikeCommand) curLogicalPlan).targetTable(), true);
-            saveTableName(tableMaps, OUTPUT_TABLE, ((CreateTableLikeCommand) curLogicalPlan).sourceTable(), true);
+            saveTableName(tableMaps, SOURCE_TABLE, ((CreateTableLikeCommand) curLogicalPlan).sourceTable(), true);
         }
 
         if (curLogicalPlan instanceof CreateViewCommand) {
@@ -116,10 +152,11 @@ public class SparkSqlParserUtils {
                 visitedExpression(tableMaps, condition);
             }
         }
-        // 处理临时表
+        // 处理缓存表
         if (curLogicalPlan instanceof CacheTableCommand) {
-            saveTableName(tableMaps, curLogicalPlan, curLogicalPlan);
             Option<LogicalPlan> plan = ((CacheTableCommand) curLogicalPlan).plan();
+            TableType tableType = plan.isDefined() ? TEMP : CACHE_TABLE;
+            saveTableName(tableMaps, tableType, ((CacheTableCommand) parentLogicalPlan).tableIdent(), plan.isEmpty());
             if (plan.isDefined()) {
                 LogicalPlan child = plan.get();
                 visitedLogicalPlan(tableMaps, child, curLogicalPlan);
@@ -135,10 +172,10 @@ public class SparkSqlParserUtils {
             tableIdentifier = ((CacheTableCommand) parentLogicalPlan).tableIdent();
         }
         if (parentLogicalPlan instanceof InsertIntoTable) {
-            tableType = OUTPUT_TABLE;
+            tableType = TARGET_TABLE;
             tableIdentifier = ((UnresolvedRelation) logicalPlan).tableIdentifier();
         } else if (!(logicalPlan instanceof CacheTableCommand)) {
-            tableType = INPUT_TABLE;
+            tableType = SOURCE_TABLE;
             tableIdentifier = ((UnresolvedRelation) logicalPlan).tableIdentifier();
         }
         saveTableName(tableMaps, tableType, tableIdentifier, true);
@@ -153,7 +190,7 @@ public class SparkSqlParserUtils {
 
     private static void saveDataBase(Map<TableType, Set<String>> tableMaps, String databaseName) {
         Set<String> dataBaseNames = tableMaps.get(DATABASE);
-        if (dataBaseNames != null && StringUtils.isNotBlank(databaseName)) {
+        if (StringUtils.isNotBlank(databaseName)) {
             dataBaseNames.add(databaseName);
         }
     }
@@ -168,25 +205,16 @@ public class SparkSqlParserUtils {
                 String[] array = databaseNameSet.toArray(new String[0]);
                 return array[array.length - 1];
             }
-            return "";
+            return EMPTY;
         }));
-        if (needDatabase && databaseName.length() == 0 && !tableMaps.get(VIEW).contains(tableIdentifier.table())) {
+        boolean temp = tableMaps.get(VIEW).contains(tableIdentifier.table()) || tableMaps.get(TEMP).contains(tableIdentifier.table());
+        if (needDatabase && databaseName.length() == 0 && !temp) {
             throw new RuntimeException(String.format("cannot match databaseName,table [%s] invalid，please check sql", tableIdentifier.table()));
         }
         if (databaseName.length() > 0) {
             databaseName.append(POINT);
         }
         return databaseName.append(tableIdentifier.table()).toString();
-    }
-
-    public static Map<String, Set<String>> getRealIOTableMap(Map<String, Set<String>> tableMaps) {
-        Set<String> cacheTable = tableMaps.get(CACHE_TABLE);
-        Set<String> inputTable = tableMaps.get(INPUT_TABLE);
-        if (CollectionUtils.isNotEmpty(cacheTable)) {
-            inputTable.removeAll(cacheTable);
-        }
-        tableMaps.remove(CACHE_TABLE);
-        return tableMaps;
     }
 
 
@@ -310,14 +338,59 @@ public class SparkSqlParserUtils {
     public static Map<TableType, Set<String>> getTableMaps() {
         ConcurrentHashMap<TableType, Set<String>> tableMap = new ConcurrentHashMap<>();
         tableMap.put(VIEW, new HashSet<>());
+        tableMap.put(TEMP, new HashSet<>());
         tableMap.put(DATABASE, new LinkedHashSet<>());
         tableMap.put(CREATE_TABLE, new HashSet<>());
-        tableMap.put(OUTPUT_TABLE, new HashSet<>());
-        tableMap.put(INPUT_TABLE, new HashSet<>());
+        tableMap.put(TARGET_TABLE, new HashSet<>());
+        tableMap.put(SOURCE_TABLE, new HashSet<>());
         tableMap.put(CACHE_TABLE, new HashSet<>());
         return tableMap;
     }
 
+    private static String replacePlaceHolder(String originSql) {
+        return pattern.matcher(originSql).replaceAll(TEMP_REPLACE);
+    }
+
+    /**
+     * 解析表名 排除掉创建的表、创建的视图、临时缓存表
+     *
+     * @param cleanSql 清空注释的sql
+     * @return databaseName.tableName
+     */
+    public static Set<String> parseTableNames(String cleanSql) {
+        String realSql = replacePlaceHolder(cleanSql);
+        Map<TableType, Set<String>> tableMaps = getTableMaps();
+        for (String singleSql : realSql.split(SEMICOLON)) {
+            try {
+                LogicalPlan logicalPlan = sparkSqlParser.parsePlan(singleSql.trim());
+                visitedLogicalPlan(tableMaps, logicalPlan, logicalPlan);
+            } catch (Exception e) {
+                log.error("sql 解析异常", e);
+                throw new BusException("sql parse error" + e.getMessage());
+            }
+        }
+        Set<String> result = new HashSet<>();
+        result.addAll(tableMaps.get(SOURCE_TABLE));
+        result.addAll(tableMaps.get(TARGET_TABLE));
+        result.addAll(tableMaps.get(CACHE_TABLE));
+        result.removeAll(tableMaps.get(CREATE_TABLE));
+        result.removeAll(tableMaps.get(VIEW));
+        result.removeAll(tableMaps.get(TEMP));
+        return result;
+    }
+
+
+    public static void main(String[] args) {
+        String sql = "use default;" +
+                "create table default.createTable like likeTable;" +
+                "CREATE TEMPORARY VIEW my_temp_table AS SELECT * FROM default.my_source_table;" +
+                "insert overwrite table test.overwriteTable partition(ds='') select * from(select * from default.table2) t;" +
+                "insert overwrite table test.overwriteTable partition(ds='11') select t1.name,t2.age from default.unionTables1 t1 union select * from test.unionTables2;" +
+                "cache table cacheTable;" +
+                "use test;" +
+                "select * from selectTest";
+        System.out.println(parseTableNames(sql));
+    }
 
 }
 

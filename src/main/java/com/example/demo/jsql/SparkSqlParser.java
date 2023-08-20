@@ -14,11 +14,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SparkSqlParser {
     public static void main(String[] args) {
-//        String sql = "insert overwrite table turing.xmg_table_2 partition(ds='') select * from(select * from default.table2) t";
+//        String sql = "insert overwrite table turing.xmg_table_2 partition(ds=\"\") select * from(select * from default.table2) t";
 //        String sql = "insert overwrite table turing.xmg_table_2 partition(ds='') values(1,2)";
 //        String sql = "insert overwrite table xmg_table_2 partition(ds='') values(1,2)";
 //        String sql = "insert overwrite table turing.xmg_table_2 partition(ds='11') select t1.name,t2.age from default.table1 t1 " +
 //                "left join default.table2 t2 on t1.id=t2.id";
+//        String sql = "insert overwrite table turing.xmg_table_2 partition(ds='11') select t1.name,t2.age from default.table1 t1 union select * from default.table2";
 //        String sql = "use default";
 //        String sql = "create table default.tab_test_dt (\n" +
 //                "  id  int  comment  'id',\n" +
@@ -27,7 +28,7 @@ public class SparkSqlParser {
 //        String sql = "create table default.createTable like default.likeTable";
 //        String sql = "CREATE TEMPORARY VIEW my_temp_table AS SELECT * FROM default.my_source_table ";
 //        String sql = "CREATE  VIEW default.my_temp_table AS SELECT * FROM default.my_source_table ";
-        String sql = "CREATE  GLOBAL  TEMPORARY VIEW my_temp_table AS SELECT * FROM default.my_source_table ";
+//        String sql = "CREATE  GLOBAL  TEMPORARY VIEW my_temp_table AS SELECT * FROM default.my_source_table ";
 //        String sql = "CREATE  GLOBAL  TEMPORARY VIEW my_temp_table";
 //        String sql = "create table default.tab_test_dt select * from default.originTable";
 //        String sql = "SELECT current_date(), t1.applyid, count(*)\n" +
@@ -38,6 +39,12 @@ public class SparkSqlParser {
 //                ") t1\n" +
 //                "GROUP BY t1.applyid";
 //        String sql="cache table test.table";
+//        String sql="CACHE TABLE activity_cached as select * from default.activity";
+//        String sql="CACHE TABLE activity_cached as table  default.activity";
+//        String sql = "select * from default.activity";
+//        String sql = "select * from default.activity";
+//        String sql = "desc default.activity";
+        String sql="show create table default.showTable";
 //        String sql = "insert overwrite table turing.xmg_table_2 partition(ds='')\n" +
 //                "select \n" +
 //                "t.cardNo\n" +
@@ -64,7 +71,7 @@ public class SparkSqlParser {
 //                "group by \n" +
 //                "t.cardNo";
 
-//        SQLStatementParser parser = SQLParserUtils.createSQLStatementParser(sql, DbType.hive.name());
+//        SQLStatementParser parser = SQLParserUtils.createSQLStatementParser(sql, DbType.antspark.name());
 //        SQLStatement statement = parser.parseStatement();
 //        statement.getChildren();
         Map<SparkSqlParserUtils.TableType, Set<String>> tableMaps = SparkSqlParserUtils.getTableMaps();

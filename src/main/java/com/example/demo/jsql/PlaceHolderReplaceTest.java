@@ -13,7 +13,7 @@ public class PlaceHolderReplaceTest {
     private static final Pattern pattern = Pattern.compile("\\$\\{.*?\\}");
 
     public static void main(String[] args) {
-        String originalString = "这是一个${占位符1}和${占位符2}的示例。";
+        String originalString = "这是一个${}和${占位符2}的示例。";
 
         Matcher matcher = pattern.matcher(originalString);
 
@@ -26,6 +26,11 @@ public class PlaceHolderReplaceTest {
         matcher.appendTail(modifiedString);
 
         System.out.println(modifiedString.toString());
+
+        String test1 = pattern.matcher(originalString).replaceAll("test1");
+        System.out.println(test1);
+        String test = originalString.replaceAll("\\$\\{[^}]*}", "test");
+        System.out.println(test);
     }
 
     private static String getReplacement(String placeholder) {
