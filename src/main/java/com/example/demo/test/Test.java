@@ -12,30 +12,15 @@ import java.util.List;
  */
 public class Test {
 
-
-
     public static void main(String[] args) {
-//        List<User> userList = new ArrayList<>();
-//
-//        for(int i=0;i<3;i++){
-//           User user=new User();
-//           user.setName("szx"+i);
-//           for(int j=0;j<2;j++){
-//
-//           }
-//        }
+
         System.out.println(Type.STRING.name());
 
-        String test="1";
-        System.out.println(test);
-        System.out.println(testInt(1,null));
-    }
-
-    public void setTest(String test){
-        test="szx";
-    }
-
-    public static boolean  testInt(Integer num,Integer num2){
-       return num<=num2;
+        String txt="license:\n" +
+                "HJgJ8pnzMC5SuRHwLPQDIXS5vthvZCMYM+yibV2ty4kyGVAQvRdAxG53br84rPVepBJmM19aJUT2ZqO3dwOw1d+sPrB21TVqUDjkcWELgSXM0rpdn5qsuk06oqWYF6+ZmlG8oWhbc5+FNqukF448F3ls0PjP1uUyKLxSYOv/C1k=\n" +
+                "publicKey:\n" +
+                "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAO1pNiTWG4iXIIFHl0OoGAib4bbC53m8fvwVAqbFS1x5H1JYUE_vCqnPKfgcyDBOdpDiYC6we16lISBlK0SFeQsCAwEAAQ";
+        String[] split = txt.split("\n");
+        System.out.println(split.length);
     }
 }

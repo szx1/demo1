@@ -10,8 +10,10 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author zengxi.song
@@ -23,10 +25,15 @@ public class TestInterceptor implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         Object proceed = invocation.proceed();
-        if (proceed instanceof Collection) {
-            Object one = ((Collection<?>) proceed).iterator().next();
-            return Collections.singletonList(one);
-        }
+//        if (proceed instanceof Collection) {
+//            Object one = ((Collection<?>) proceed).iterator().next();
+//            return Collections.singletonList(one);
+//        }
         return proceed;
+    }
+
+    public static Object test() {
+        List<String> list = new ArrayList<>();
+        return list;
     }
 }

@@ -11,11 +11,13 @@ import com.example.demo.service.TestDataBaseService;
 import com.google.common.collect.Lists;
 import generator.domain.GroupTest;
 import generator.mapper.TestMapper;
+import javafx.util.Pair;
 import org.apache.commons.collections.list.AbstractLinkedList;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
@@ -23,8 +25,11 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -149,7 +154,9 @@ class Demo1ApplicationTests {
     @Test
     public void testLimit() {
         Example example = new Example(generator.domain.Test.class);
-        example.setOrderByClause("id desc limit 1");
+//        example.setOrderByClause("id desc limit 1");
+        example.createCriteria().andIn("id", Lists.newArrayList("108", "113", "114"));
+        example.and().andEqualTo("age", 1);
         List<generator.domain.Test> tests = testMapper.selectByExample(example);
         System.out.println(tests.get(0));
     }
@@ -159,10 +166,48 @@ class Demo1ApplicationTests {
         generator.domain.Test test = new generator.domain.Test("szx", 23, 1, Sex.MALE);
 //        testMapper.insertSelective(test);
         Example example = new Example(generator.domain.Test.class);
-        example.createCriteria().andEqualTo("name", "szx");
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name", "szx");
         List<generator.domain.Test> list = testMapper.selectByExample(example);
+        criteria.andEqualTo("age", 23);
+        List<generator.domain.Test> list1 = testMapper.selectByExample(example);
         System.out.println(list.size());
+        System.out.println(list1.size());
 
+    }
+
+    @Test
+    public void testMessageSource() {
+        MessageSource bean = applicationContext.getBean(MessageSource.class);
+        bean.getMessage("11", null, Locale.CHINA);
+        System.out.println(bean);
+    }
+
+    @Test
+    public void testBoolean() {
+        Boolean aBoolean = testMapper.testBoolean();
+        System.out.println(1);
+    }
+
+    @Test
+    public void testPair() {
+        Set<Pair<String, Integer>> pairs = new HashSet<>();
+        pairs.add(new Pair("szx", 23));
+        pairs.add(new Pair("szx", 100));
+        pairs.add(new Pair("1", 100));
+        List<generator.domain.Test> list = testMapper.testPair(pairs);
+        System.out.println(list.size());
+    }
+
+    @Test
+    public void testAlter() {
+        testMapper.alterTableLength(30);
+    }
+
+    @Test
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public void testRecursion() {
+        testMapper.testRecursion(Lists.newArrayList(1L, 1L, 2L, 4L, 5L, 6L));
     }
 
 }

@@ -79,7 +79,25 @@
         where name = #{name}
     </select>
     <select id="selectOneOrderById" resultMap="BaseResultMap">
-        select * from test order by id desc limit 1
+        select *
+        from test
+        order by id desc
+        limit 1
+    </select>
+    <select id="testBoolean" resultType="java.lang.Boolean">
+        select count(*)
+        from test
+        limit 2
+    </select>
+    <select id="testPair" resultMap="BaseResultMap" parameterType="javafx.util.Pair">
+        <if test="pairs.size>0">
+            select *
+            from test
+            where (name, age) in
+            <foreach collection="pairs" separator="," item="pair" open="(" close=")">
+                (#{pair.key},#{pair.value})
+            </foreach>
+        </if>
     </select>
 
     <insert id="insertReturnId" keyProperty="test.id" useGeneratedKeys="true">
@@ -115,4 +133,7 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateWhenCase"></update>
+    <update id="alterTableLength">
+        alter table test modify column `note` varchar(#{length}) COLLATE utf8mb4_general_ci DEFAULT NULL;
+    </update>
 </mapper>

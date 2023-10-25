@@ -17,7 +17,6 @@ import java.util.List;
  * @date 2023/2/8
  */
 @Service
-@ConditionalOnBean(ListRequest.class)
 public class TestDataBaseService {
     @Resource
     private TestMapper testMapper;
