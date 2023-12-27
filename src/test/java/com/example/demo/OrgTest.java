@@ -36,10 +36,10 @@ public class OrgTest {
     }
 
     public static void main(String[] args) {
-        Map<String,Object> map1=new HashMap<>();
-        map1.put("szx",new Org());
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("szx", new Org());
         Map<String, Object> map2 = new HashMap<>(map1);
-        ((Org)map2.get("szx")).setName("szx");
+        ((Org) map2.get("szx")).setName("szx");
         System.out.println(1);
         String jsonStr = JsonUtil.jsonSerialize(map1);
         Map<String, Object> originalExtendMap = JsonUtil.jsonDeserialize(jsonStr, new TypeReference<Map<String, Object>>() {
@@ -47,7 +47,7 @@ public class OrgTest {
 
         Map<String, Org> newExtendMap = JsonUtil.jsonDeserialize(jsonStr, new TypeReference<Map<String, Org>>() {
         });
-        ((Org)newExtendMap.get("szx")).setName("newExtendMap");
+        ((Org) newExtendMap.get("szx")).setName("newExtendMap");
         System.out.println(1);
     }
 }

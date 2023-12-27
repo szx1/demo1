@@ -3,6 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="generator.mapper.TestMapper">
+    <cache readOnly="false"/>
+    <cache readOnly="true"/>
 
     <resultMap id="BaseResultMap" type="generator.domain.Test">
         <id property="id" column="id" jdbcType="INTEGER"/>
@@ -81,13 +83,11 @@
     <select id="selectOneOrderById" resultMap="BaseResultMap">
         select *
         from test
-        order by id desc
-        limit 1
+        order by id desc limit 1
     </select>
-    <select id="testBoolean" resultType="java.lang.Boolean">
+    <select id="testBoolean" useCache="true" resultType="java.lang.Boolean">
         select count(*)
-        from test
-        limit 2
+        from test limit 2
     </select>
     <select id="testPair" resultMap="BaseResultMap" parameterType="javafx.util.Pair">
         <if test="pairs.size>0">
@@ -134,6 +134,6 @@
     </update>
     <update id="updateWhenCase"></update>
     <update id="alterTableLength">
-        alter table test modify column `note` varchar(#{length}) COLLATE utf8mb4_general_ci DEFAULT NULL;
+        alter table test modify column `note` varchar (#{length}) COLLATE utf8mb4_general_ci DEFAULT NULL;
     </update>
 </mapper>

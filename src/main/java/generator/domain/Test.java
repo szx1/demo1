@@ -2,7 +2,9 @@ package generator.domain;
 
 import com.example.demo.enums.Sex;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +16,8 @@ import javax.persistence.Table;
 /**
  * @TableName test
  */
+@Setter
+@Getter
 @Table(name = "test")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,6 +51,9 @@ public class Test implements Serializable {
     @Column(name = "sex")
     private Sex sex;
 
+    @Column(name = "note")
+    private String note;
+
     private static final long serialVersionUID = 1L;
 
     public Test(String name, Integer age, Integer forIndex, Sex sex) {
@@ -54,70 +61,6 @@ public class Test implements Serializable {
         this.age = age;
         this.forIndex = forIndex;
         this.date = new Date();
-        this.sex = sex;
-    }
-
-    /**
-     *
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     *
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     *
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     *
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     *
-     */
-    public Integer getAge() {
-        return age;
-    }
-
-    /**
-     *
-     */
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    /**
-     *
-     */
-    public Integer getForIndex() {
-        return forIndex;
-    }
-
-    /**
-     *
-     */
-    public void setForIndex(Integer forIndex) {
-        this.forIndex = forIndex;
-    }
-
-    public Sex getSex() {
-        return sex;
-    }
-
-    public void setSex(Sex sex) {
         this.sex = sex;
     }
 
@@ -148,14 +91,6 @@ public class Test implements Serializable {
         result = prime * result + ((getAge() == null) ? 0 : getAge().hashCode());
         result = prime * result + ((getForIndex() == null) ? 0 : getForIndex().hashCode());
         return result;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     @Override

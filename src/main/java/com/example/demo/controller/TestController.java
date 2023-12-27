@@ -2,9 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.anno.TestAnno;
 import com.example.demo.config.ThreadContext;
+import com.example.demo.entity.Result;
 import com.example.demo.request.ListRequest;
 import com.example.demo.util.FileUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
+import generator.domain.Test;
 import generator.mapper.TestMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.AbstractFileResolvingResource;
@@ -144,8 +146,14 @@ public class TestController {
     }
 
     @GetMapping("empty")
-    public void testEmpty(){
-        System.out.println(empty+"123test");
+    public void testEmpty() {
+        System.out.println(empty + "123test");
+    }
+
+    @GetMapping("json")
+    public Result<Object> testJson() {
+        Test test = testMapper.selectByPrimaryKey(115);
+        return Result.success(test.getNote());
     }
 
     public static void main(String[] args) {

@@ -15,6 +15,7 @@ import org.springframework.core.type.AnnotationMetadata;
 public class ImportTest implements ImportBeanDefinitionRegistrar {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+        System.out.println(importingClassMetadata.getClass());
         BeanDefinition beanDefinition = new RootBeanDefinition();
         beanDefinition.setBeanClassName(ImportTest2.class.getName());
         registry.registerBeanDefinition("importTest2", beanDefinition);

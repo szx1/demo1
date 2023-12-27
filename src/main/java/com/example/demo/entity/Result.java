@@ -42,4 +42,12 @@ public class Result<T> {
         return response;
     }
 
+    public static <T> Result<T> error(String message) {
+        Result<T> response = new Result<T>();
+        response.success = true;
+        response.code = 200;
+        response.message = message;
+        return response;
+    }
+
 }
